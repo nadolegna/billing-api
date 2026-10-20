@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: billing-api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/billing
+    username: billing
+    password: billing
+  jpa:
+    hibernate:
+      ddl-auto: validate   # schema is owned by Flyway, Hibernate only checks it
+    open-in-view: false
+  flyway:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
