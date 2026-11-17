@@ -2,15 +2,15 @@ package com.example.billing.service;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.example.billing.domain.AppUser;
 import com.example.billing.dto.CreateUserRequest;
 import com.example.billing.dto.UserResponse;
+import com.example.billing.exception.ConflictException;
+import com.example.billing.exception.NotFoundException;
 import com.example.billing.repository.AppUserRepository;
 import com.example.billing.security.CurrentUser;
 
@@ -31,7 +31,7 @@ public class UserService {
     public UserResponse me() {
         return users.findByIdAndTenantId(currentUser.userId(), currentUser.tenantId())
             .map(UserResponse::from)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+            .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Transactional(readOnly = true)
@@ -45,7 +45,7 @@ public class UserService {
     public UserResponse create(CreateUserRequest request) {
         String email = request.email().trim().toLowerCase();
         if (users.findByEmail(email).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+            throw new ConflictException("Email already in use");
         }
 
         AppUser user = new AppUser();

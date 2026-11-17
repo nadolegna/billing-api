@@ -13,5 +13,7 @@ public interface PlanRepository extends JpaRepository<Plan, UUID> {
 
     Page<Plan> findByTenantId(UUID tenantId, Pageable pageable);
 
+    Page<Plan> findByTenantIdAndActive(UUID tenantId, boolean active, Pageable pageable);
+
     Optional<Plan> findByIdAndTenantId(UUID id, UUID tenantId);
 }
